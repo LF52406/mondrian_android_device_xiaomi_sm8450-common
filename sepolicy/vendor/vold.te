@@ -1,0 +1,3 @@
+# Grant vold permissions to create and manage app data directories (Scoped Storage fix)
+allow vold media_rw_data_file:dir { create getattr read search write };
+allow vold media_rw_data_file:file { create getattr read write open };

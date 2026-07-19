@@ -333,6 +333,9 @@ subsystem mem_buf_vm
 /dev/nq-nci               0660    nfc         nfc
 /dev/assd                 0660    nfc         nfc
 
+# eSE permissions
+/dev/st54spi_gpio         0660   system     system
+
 # UIO devices
 /dev/uio0                 0660   system     system
 /dev/uio1                 0660   system     system
@@ -505,6 +508,13 @@ subsystem mem_buf_vm
 # devcoredump data attributes
 /sys/class/devcoredump/devcd*                           data                            0600    system  system
 
+#power_state device node
+/dev/power_state           0660   system      system
+
 # Battery
 /sys/class/qcom-battery                                 input_suspend                   0660    system  system
 /sys/class/qcom-battery                                 reverse_chg_mode                0644    system  system
+
+# Torch control
+/sys/devices/platform/soc/c42d000.qcom,spmi/spmi-0/0-02/c42d000.qcom,spmi:qcom,pm8350c@2:qcom,flash_led@ee00/leds/led:torch_0 brightness 0660 cameraserver camera
+/sys/devices/platform/soc/c42d000.qcom,spmi/spmi-0/0-02/c42d000.qcom,spmi:qcom,pm8350c@2:qcom,flash_led@ee00/leds/led:switch_2 brightness 0660 cameraserver camera

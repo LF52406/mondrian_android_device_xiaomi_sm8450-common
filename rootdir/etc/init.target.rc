@@ -117,6 +117,36 @@ on boot
     #USB controller configuration
     setprop vendor.usb.controller a600000.dwc3
 
+    # Set doze mode permissions
+    chown system system /sys/devices/platform/soc/soc:qcom,dsi-display-primary/doze_mode
+    chmod 0660 /sys/devices/platform/soc/soc:qcom,dsi-display-primary/doze_mode
+
+    # Xiaomi Thermal Profiles permissions
+    chmod 0664 /sys/class/thermal/thermal_message/sconfig
+    chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0666 /sys/class/thermal/thermal_message/temp_state
+    chown system system /sys/class/thermal/thermal_message/temp_state
+    chmod 0664 /sys/class/thermal/thermal_message/charger_temp
+    chown system system /sys/class/thermal/thermal_message/charger_temp
+    chmod 0664 /sys/class/thermal/thermal_message/board_sensor_temp_comp
+    chown system system /sys/class/thermal/thermal_message/board_sensor_temp_comp
+    chmod 0664 /sys/class/thermal/thermal_message/cpu_nolimit_temp 
+    chown system system /sys/class/thermal/thermal_message/cpu_nolimit_temp
+    chmod 0664 /sys/class/thermal/thermal_message/balance_mode
+    chown system system /sys/class/thermal/thermal_message/balance_mode
+    chmod 0664 /sys/class/thermal/thermal_message/flash_state
+    chown cameraserver cameraserver /sys/class/thermal/thermal_message/flash_state
+
+    # GameBar GPU permissions
+    chmod 0444 /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
+    chmod 0444 /sys/class/kgsl/kgsl-3d0/gpuclk
+
+    # Smart I2C power management to balance battery and touch response
+    write /sys/bus/i2c/devices/i2c-a84000/power/autosuspend_delay_ms 5000
+    write /sys/bus/i2c/devices/i2c-994000/power/autosuspend_delay_ms 5000
+    write /sys/bus/i2c/devices/i2c-a84000/power/control auto
+    write /sys/bus/i2c/devices/i2c-994000/power/control auto
+
 on property:vendor.display.lcd_density=560
    setprop dalvik.vm.heapgrowthlimit 256m
 

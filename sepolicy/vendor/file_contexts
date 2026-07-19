@@ -47,6 +47,12 @@
 /mnt/vendor/persist/goodix(/.*)? u:object_r:vendor_fingerprint_data_file:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.biometrics\.fingerprint-service\.xiaomi u:object_r:hal_fingerprint_default_exec:s0
 
+# FPS info
+/sys/class/drm/card0/sde-crtc-0/measured_fps                         u:object_r:vendor_sysfs_graphics:s0
+
+# Init
+/(vendor|system/vendor)/bin/init\.xiaomi_sm8450\.sh u:object_r:vendor_qti_init_shell_exec:s0
+
 # Mac Address
 /data/vendor/mac_addr(/.*)? u:object_r:vendor_mac_vendor_data_file:s0
 /vendor/bin/nv_mac u:object_r:vendor_wcnss_service_exec:s0
@@ -67,6 +73,7 @@
 /data/vendor/thermal(/.*)? u:object_r:thermal_data_file:s0
 /sys/class/thermal/thermal_message/flash_state u:object_r:sys_thermal_flash_state:s0
 /sys/class/thermal/thermal_message/wifi_limit u:object_r:sys_thermal_wifi_limit:s0
+/sys/class/thermal/thermal_zone87/temp u:object_r:sysfs_thermal:s0
 /sys/devices/virtual/thermal/thermal_message/flash_state u:object_r:sys_thermal_flash_state:s0
 /sys/devices/virtual/thermal/thermal_message/wifi_limit u:object_r:sys_thermal_wifi_limit:s0
 

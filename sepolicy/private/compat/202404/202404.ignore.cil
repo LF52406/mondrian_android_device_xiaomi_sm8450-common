@@ -6,4 +6,5 @@
 (typeattributeset new_objects
   ( new_objects
     devicesettings_app
-    settingslib_prop))
+    settingslib_prop
+    vendor_latency_device))

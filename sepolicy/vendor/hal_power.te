@@ -1,0 +1,5 @@
+# Allow power HAL to set CPU DMA latency hints (Android 17)
+allow hal_power_default vendor_latency_device:chr_file { open write };
+
+# Allow Power HAL to control CPU migrate (sched_upmigrate / sched_downmigrate)
+allow hal_power_default vendor_proc_sched_walt:file { open write getattr };

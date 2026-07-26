@@ -70,7 +70,6 @@ TARGET_NEEDS_DTBOIMAGE := true
 BOARD_KERNEL_BASE        := 0x00000000
 BOARD_KERNEL_PAGESIZE    := 4096
 BOARD_KERNEL_IMAGE_NAME := Image
-BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
 
 TARGET_KERNEL_ADDITIONAL_FLAGS := TARGET_PRODUCT=$(PRODUCT_DEVICE)
 TARGET_KERNEL_SOURCE := kernel/xiaomi/sm8450
@@ -88,6 +87,7 @@ BOARD_VENDOR_RAMDISK_FRAGMENTS := dlkm
 BOARD_VENDOR_RAMDISK_FRAGMENT.dlkm.KERNEL_MODULE_DIRS := top
 
 BOARD_KERNEL_CMDLINE := \
+    androidboot.init_fatal_reboot_target=recovery \
     disable_dma32=on \
     mtdoops.fingerprint=$(LINEAGE_VERSION)
 BOARD_BOOTCONFIG := \

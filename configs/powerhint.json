@@ -219,7 +219,7 @@
       "HoldFd": true
     },
     {
-      "Name": "UclampTAMin",
+      "Name": "UclampMin",
       "Path": "/dev/cpuctl/top-app/cpu.uclamp.min",
       "Values": [
         "0",
@@ -569,7 +569,7 @@
     },
     {
       "PowerHint": "INTERACTION",
-      "Node": "UclampTAMin",
+      "Node": "UclampMin",
       "Duration": 0,
       "Value": "25"
     },
@@ -767,7 +767,7 @@
     },
     {
       "PowerHint": "LAUNCH",
-      "Node": "UclampTAMin",
+      "Node": "UclampMin",
       "Duration": 1500,
       "Value": "50"
     },
@@ -875,7 +875,7 @@
     },
     {
       "PowerHint": "EXPENSIVE_RENDERING",
-      "Node": "UclampTAMin",
+      "Node": "UclampMin",
       "Duration": 0,
       "Value": "40"
     },
@@ -914,6 +914,197 @@
       "Node": "GPUMaxFreq",
       "Duration": 0,
       "Value": "515000000"
+    },
+    {
+      "PowerHint": "DISPLAY_UPDATE_IMMINENT",
+      "Node": "CPUBigPlusClusterMinFreq",
+      "Duration": 200,
+      "Value": "2131200"
+    },
+    {
+      "PowerHint": "DISPLAY_UPDATE_IMMINENT",
+      "Node": "CPUBigClusterMinFreq",
+      "Duration": 200,
+      "Value": "1766400"
+    },
+    {
+      "PowerHint": "DISPLAY_UPDATE_IMMINENT",
+      "Node": "L3MinFreq",
+      "Duration": 200,
+      "Value": "1593600"
+    },
+    {
+      "PowerHint": "DISPLAY_UPDATE_IMMINENT",
+      "Node": "UclampMin",
+      "Duration": 200,
+      "Value": "40"
+    },
+    {
+      "PowerHint": "UDFPS",
+      "Node": "CPUBigPlusClusterMaxFreq",
+      "Duration": 1000,
+      "Value": "9999999"
+    },
+    {
+      "PowerHint": "UDFPS",
+      "Node": "CPUBigClusterMaxFreq",
+      "Duration": 1000,
+      "Value": "9999999"
+    },
+    {
+      "PowerHint": "UDFPS",
+      "Node": "CPUBigClusterMinFreq",
+      "Duration": 1000,
+      "Value": "1555200"
+    },
+    {
+      "PowerHint": "UDFPS",
+      "Node": "CPUBigPlusClusterMinFreq",
+      "Duration": 1000,
+      "Value": "1651200"
+    },
+    {
+      "PowerHint": "UDFPS",
+      "Node": "UclampMin",
+      "Duration": 1000,
+      "Value": "50"
+    },
+    {
+      "PowerHint": "UDFPS",
+      "Node": "PMQoSCpuDmaLatency",
+      "Duration": 1000,
+      "Value": "44"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "CPUBigPlusClusterMaxFreq",
+      "Duration": 1000,
+      "Value": "9999999"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "CPUBigClusterMaxFreq",
+      "Duration": 1000,
+      "Value": "9999999"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "CPUBigClusterMinFreq",
+      "Duration": 1000,
+      "Value": "1555200"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "CPUBigPlusClusterMinFreq",
+      "Duration": 1000,
+      "Value": "1651200"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "CPUBWMinFreq",
+      "Duration": 1000,
+      "Value": "2092000"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "LLCCBWMinFreq",
+      "Duration": 1000,
+      "Value": "806000"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "L3MinFreq",
+      "Duration": 1000,
+      "Value": "1593600"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "UclampMin",
+      "Duration": 1000,
+      "Value": "50"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "PMQoSCpuDmaLatency",
+      "Duration": 1000,
+      "Value": "44"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "CPUBigPlusClusterMaxFreq",
+      "Duration": 1000,
+      "Value": "9999999"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "CPUBigClusterMaxFreq",
+      "Duration": 1000,
+      "Value": "9999999"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "CPUBigClusterMinFreq",
+      "Duration": 1000,
+      "Value": "1881600"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "CPUBigPlusClusterMinFreq",
+      "Duration": 1000,
+      "Value": "2131200"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "UclampMin",
+      "Duration": 1000,
+      "Value": "50"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "CPUBWMinFreq",
+      "Duration": 1000,
+      "Value": "2736000"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "LLCCBWMinFreq",
+      "Duration": 1000,
+      "Value": "933000"
+    }
+  ],
+  "AdpfConfig": [
+    {
+      "Name": "REFRESH_60FPS",
+      "PID_Po": 1.0,
+      "PID_Pu": 1.0,
+      "PID_I": 0.0,
+      "PID_D": 0.0,
+      "UclampMin_On": 20,
+      "UclampMin_High": 60,
+      "UclampMin_Low": 0,
+      "StaleTimeUs": 50000
+    },
+    {
+      "Name": "REFRESH_90FPS",
+      "PID_Po": 1.5,
+      "PID_Pu": 1.5,
+      "PID_I": 0.0,
+      "PID_D": 0.0,
+      "UclampMin_On": 25,
+      "UclampMin_High": 60,
+      "UclampMin_Low": 0,
+      "StaleTimeUs": 33000
+    },
+    {
+      "Name": "REFRESH_120FPS",
+      "PID_Po": 2.0,
+      "PID_Pu": 2.0,
+      "PID_I": 0.0,
+      "PID_D": 0.0,
+      "UclampMin_On": 30,
+      "UclampMin_High": 60,
+      "UclampMin_Low": 0,
+      "StaleTimeUs": 16000
     }
   ]
 }

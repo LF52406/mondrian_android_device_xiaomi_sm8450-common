@@ -589,4 +589,14 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <instance>MwqemAdapter</instance>
         </interface>
     </hal>
+    <!-- Graphics Allocator AIDL -->
+    <hal format="aidl">
+        <name>android.hardware.graphics.allocator</name>
+        <version>1</version>
+        <interface>
+            <name>IAllocator</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+   
 </manifest>

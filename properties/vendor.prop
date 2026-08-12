@@ -77,9 +77,6 @@ vendor.camera.aux.packageexcludelist=com.adobe.scan.android,com.tencent.mm,us.zo
 # Chipset
 ro.soc.manufacturer=QTI
 
-# Dex2oat
-dalvik.vm.dex2oat64.enabled=true
-
 # Display
 vendor.display.comp_mask=0
 vendor.display.disable_3d_adaptive_tm=0

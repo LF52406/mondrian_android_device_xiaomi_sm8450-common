@@ -49,17 +49,17 @@ BOARD_SHIPPING_API_LEVEL := 31
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio@7.0-impl:64 \
-    android.hardware.audio.effect@7.0-impl:64 \
+    android.hardware.audio@7.0-impl \
+    android.hardware.audio.effect@7.0-impl \
     android.hardware.audio.service \
-    android.hardware.soundtrigger@2.3-impl:64 \
+    android.hardware.soundtrigger@2.3-impl \
     vendor.qti.hardware.AGMIPC@1.0-service
 
 PRODUCT_PACKAGES += \
-    audio.bluetooth.default:64 \
+    audio.bluetooth.default \
     audio.primary.taro \
-    audio.r_submix.default:64 \
-    audio.usb.default:64 \
+    audio.r_submix.default \
+    audio.usb.default \
     sound_trigger.primary.taro
 
 PRODUCT_PACKAGES += \
@@ -102,7 +102,7 @@ PRODUCT_COPY_FILES += \
 
 # Bluetooth
 PRODUCT_PACKAGES += \
-    android.hardware.bluetooth.audio-impl:64
+    android.hardware.bluetooth.audio-impl
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
@@ -153,7 +153,7 @@ PRODUCT_PACKAGES += \
 # Fingerprint
 PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint-service.xiaomi \
-    libudfpshandler:64
+    libudfpshandler
 
 ifeq ($(TARGET_HAS_UDFPS),true)
 PRODUCT_PACKAGES += \

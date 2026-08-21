@@ -12,8 +12,8 @@ function write_irq_affinity() {
     [ -d "$irq_dir" ] && echo $2 > "${irq_dir}/smp_affinity_list"
 }
 
-# IRQ Tuning
-# kgsl_3d0_irq -> CPU 1
-# msm_drm -> CPU 2
-write_irq_affinity kgsl_3d0_irq 1
-write_irq_affinity msm_drm 2
+# IRQ Tuning for Butter Smooth UI on SM8450
+# Move heavy GPU and Display interrupts to the A710 cluster (CPUs 4-6)
+# to prevent bottlenecks on weak A510 little cores.
+write_irq_affinity kgsl_3d0_irq 4-6
+write_irq_affinity msm_drm 4-6

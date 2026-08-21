@@ -44,6 +44,21 @@
       "Name": "CgroupProcs",
       "Controller": "cgroup2",
       "File": "cgroup.procs"
+    },
+    {
+      "Name": "MemMax",
+      "Controller": "memory",
+      "File": "memory.max"
+    },
+    {
+      "Name": "MemHigh",
+      "Controller": "memory",
+      "File": "memory.high"
+    },
+    {
+      "Name": "MemLow",
+      "Controller": "memory",
+      "File": "memory.low"
     }
   ],
 
@@ -57,6 +72,14 @@
           {
             "Controller": "cpu",
             "Path": "background"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "UClampMax",
+            "Value": "30"
           }
         }
       ]
@@ -123,6 +146,14 @@
             "Controller": "cpu",
             "Path": "foreground"
           }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "UClampMin",
+            "Value": "10"
+          }
         }
       ]
     },
@@ -148,6 +179,14 @@
           {
             "Controller": "cpu",
             "Path": "top-app"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "UClampMin",
+            "Value": "20"
           }
         }
       ]

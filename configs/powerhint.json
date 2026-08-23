@@ -43,7 +43,7 @@
         "441600",
         "300000"
       ],
-      "DefaultIndex": 0,
+      "DefaultIndex": 14,
       "ResetOnInit": true
     },
     {
@@ -116,7 +116,7 @@
         "633600",
         "0"
       ],
-      "DefaultIndex": 0,
+      "DefaultIndex": 18,
       "ResetOnInit": true
     },
     {
@@ -195,7 +195,7 @@
         "787200",
         "0"
       ],
-      "DefaultIndex": 0,
+      "DefaultIndex": 21,
       "ResetOnInit": true
     },
     {
@@ -275,6 +275,7 @@
         "0",
         "25",
         "35",
+        "40",
         "51"
       ],
       "DefaultIndex": 0,
@@ -465,6 +466,7 @@
         "SUSTAINED_PERFORMANCE",
         ""
       ],
+      "DefaultIndex": 1,
       "Type": "Property"
     },
     {
@@ -474,6 +476,7 @@
         "EXPENSIVE_RENDERING",
         ""
       ],
+      "DefaultIndex": 1,
       "Type": "Property"
     },
     {
@@ -682,7 +685,7 @@
       "PowerHint": "INTERACTIVE",
       "Node": "CPULittleClusterDownRateLimit",
       "Duration": 0,
-      "Value": "20000"
+      "Value": "2000"
     },
     {
       "PowerHint": "INTERACTIVE",
@@ -694,7 +697,7 @@
       "PowerHint": "INTERACTIVE",
       "Node": "CPUBigClusterDownRateLimit",
       "Duration": 0,
-      "Value": "10000"
+      "Value": "2000"
     },
     {
       "PowerHint": "INTERACTIVE",
@@ -706,7 +709,7 @@
       "PowerHint": "INTERACTIVE",
       "Node": "CPUBigPlusClusterDownRateLimit",
       "Duration": 0,
-      "Value": "5000"
+      "Value": "2000"
     },
     {
       "PowerHint": "LAUNCH",

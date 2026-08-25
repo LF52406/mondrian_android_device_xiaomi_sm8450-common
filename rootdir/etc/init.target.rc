@@ -141,12 +141,6 @@ on boot
     chmod 0444 /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
     chmod 0444 /sys/class/kgsl/kgsl-3d0/gpuclk
 
-    # Smart I2C power management to balance battery and touch response
-    write /sys/bus/i2c/devices/i2c-a84000/power/autosuspend_delay_ms 5000
-    write /sys/bus/i2c/devices/i2c-994000/power/autosuspend_delay_ms 5000
-    write /sys/bus/i2c/devices/i2c-a84000/power/control auto
-    write /sys/bus/i2c/devices/i2c-994000/power/control auto
-
 on property:vendor.display.lcd_density=560
    setprop dalvik.vm.heapgrowthlimit 256m
 

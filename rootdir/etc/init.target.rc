@@ -141,6 +141,21 @@ on boot
     chmod 0444 /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
     chmod 0444 /sys/class/kgsl/kgsl-3d0/gpuclk
 
+    # Grant system access to uclamp nodes for PowerHAL
+    chown system system /dev/cpuctl/top-app/cpu.uclamp.min
+    chmod 0664 /dev/cpuctl/top-app/cpu.uclamp.min
+    chown system system /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive
+    chmod 0664 /dev/cpuctl/top-app/cpu.uclamp.latency_sensitive
+
+    chown system system /dev/cpuctl/foreground/cpu.uclamp.min
+    chmod 0664 /dev/cpuctl/foreground/cpu.uclamp.min
+
+    chown system system /dev/cpuctl/background/cpu.uclamp.min
+    chmod 0664 /dev/cpuctl/background/cpu.uclamp.min
+
+    chown system system /dev/cpuctl/system-background/cpu.uclamp.min
+    chmod 0664 /dev/cpuctl/system-background/cpu.uclamp.min
+
 on property:vendor.display.lcd_density=560
    setprop dalvik.vm.heapgrowthlimit 256m
 

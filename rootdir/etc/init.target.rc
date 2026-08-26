@@ -137,10 +137,6 @@ on boot
     chmod 0664 /sys/class/thermal/thermal_message/flash_state
     chown cameraserver cameraserver /sys/class/thermal/thermal_message/flash_state
 
-    # GameBar GPU permissions
-    chmod 0444 /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
-    chmod 0444 /sys/class/kgsl/kgsl-3d0/gpuclk
-
     # Grant system access to uclamp nodes for PowerHAL
     chown system system /dev/cpuctl/top-app/cpu.uclamp.min
     chmod 0664 /dev/cpuctl/top-app/cpu.uclamp.min

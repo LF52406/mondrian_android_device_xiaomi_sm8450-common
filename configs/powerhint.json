@@ -713,6 +713,18 @@
     },
     {
       "PowerHint": "LAUNCH",
+      "Node": "SleepDisabled",
+      "Duration": 1000,
+      "Value": "1"
+    },
+    {
+      "PowerHint": "LAUNCH",
+      "Node": "PredictionDisabled",
+      "Duration": 1000,
+      "Value": "1"
+    },
+    {
+      "PowerHint": "LAUNCH",
       "Node": "UclampTAMin",
       "Duration": 1000,
       "Value": "50"
@@ -893,6 +905,18 @@
     },
     {
       "PowerHint": "CAMERA_LAUNCH",
+      "Node": "SleepDisabled",
+      "Duration": 500,
+      "Value": "1"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
+      "Node": "PredictionDisabled",
+      "Duration": 500,
+      "Value": "1"
+    },
+    {
+      "PowerHint": "CAMERA_LAUNCH",
       "Node": "CPUBigPlusClusterMaxFreq",
       "Duration": 500,
       "Value": "9999999"
@@ -932,6 +956,18 @@
       "Node": "PMQoSCpuDmaLatency",
       "Duration": 500,
       "Value": "44"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "SleepDisabled",
+      "Duration": 500,
+      "Value": "1"
+    },
+    {
+      "PowerHint": "CAMERA_SHOT",
+      "Node": "PredictionDisabled",
+      "Duration": 500,
+      "Value": "1"
     },
     {
       "PowerHint": "CAMERA_SHOT",

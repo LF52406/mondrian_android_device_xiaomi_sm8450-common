@@ -1,2 +1,11 @@
-# Allow diag-router to search modem data directory
-allow vendor_diag-router vendor_modem_data_file:dir search;
+# Define the domain for the diag_router process
+type vendor_diag_router, domain;
+
+# Define the executable file type for the daemon
+type vendor_diag_router_exec, exec_type, vendor_file_type, file_type;
+
+# Allow init to transition to the daemon domain upon execution
+init_daemon_domain(vendor_diag_router)
+
+# Allow diag_router daemon to search the modem data directory
+allow vendor_diag_router vendor_modem_data_file:dir search;

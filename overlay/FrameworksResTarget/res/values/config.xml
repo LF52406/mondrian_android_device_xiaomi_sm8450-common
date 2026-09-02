@@ -40,21 +40,6 @@
     <!-- Bytes that the PinnerService will pin for Home app -->
     <integer name="config_pinnerHomePinBytes">6291456</integer>
 
-    <!-- Auto brightness debounce -->
-    <integer name="config_autoBrightnessBrighteningLightDebounce">4000</integer>
-    <integer name="config_autoBrightnessDarkeningLightDebounce">200</integer>
-
-    <!-- Slow down how fast brightness can increase -->
-    <integer name="config_screenBrightnessRampRateFast">200</integer>
-    <integer name="config_screenBrightnessRampRateSlow">200</integer>
-
-    <!-- Hysteresis: prevents sudden brightness jumps -->
-    <integer name="config_autoBrightnessBrighteningHysteresis">15</integer>
-    <integer name="config_autoBrightnessDarkeningHysteresis">5</integer>
-
-    <!-- Auto brightness lightsensor rate -->
-    <integer name="config_autoBrightnessLightSensorRate">500</integer>
-
     <!-- True if the device supports Sustained Performance Mode -->
     <bool name="config_sustainedPerformanceModeSupported">true</bool>
 </resources>

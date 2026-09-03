@@ -5,16 +5,3 @@ allow platform_app vendor_sysfs_graphics:file r_file_perms;
 # Soter service
 allow platform_app vendor_hal_soter_hwservice:hwservice_manager find;
 binder_call(platform_app, vendor_hal_soter_qti)
-
-# Allow MiuiCamera to read sensor and panel properties
-get_prop(platform_app, vendor_panel_info_prop)
-get_prop(platform_app, vendor_camera_sensor_prop)
-
-# Allow MiuiCamera to find post-processing hwservice
-allow platform_app vendor_hal_camerapostproc_xiaomi_hwservice:hwservice_manager find;
-
-# Allow MiuiCamera to execute system linker
-allow platform_app system_linker_exec:file execute_no_trans;
-
-# Allow MiuiCamera to read vendor libraries
-allow platform_app vendor_file:file { read open getattr map };

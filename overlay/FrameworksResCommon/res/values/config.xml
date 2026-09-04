@@ -95,6 +95,26 @@
          that can be set by the user. -->
     <item name="config_screenBrightnessDozeFloat" format="float" type="dimen">0.06667</item>
 
+    <!-- Stability requirements in milliseconds for accepting a new brightness level.  This is used
+         for debouncing the light sensor.  Different constants are used to debounce the light sensor
+         when adapting to brighter or darker environments.  This parameter controls how quickly
+         brightness changes occur in response to an observed change in light level that exceeds the
+         hysteresis threshold. -->
+    <integer name="config_autoBrightnessBrighteningLightDebounce">2000</integer>
+    <integer name="config_autoBrightnessDarkeningLightDebounce">4000</integer>
+
+    <!-- Light sensor polling rate in milliseconds. -->
+    <integer name="config_autoBrightnessLightSensorRate">250</integer>
+    <integer name="config_autoBrightnessInitialLightSensorRate">250</integer>
+
+    <!-- Fast brightness animation ramp rate in brightness units per second-->
+    <item name="config_brightnessRampRateFast" format="float" type="dimen">180.0</item>
+    <integer name="config_brightness_ramp_rate_fast">180</integer>
+
+    <!-- Slow brightness animation ramp rate in brightness units per second-->
+    <item name="config_brightnessRampRateSlow" format="float" type="dimen">60.0</item>
+    <integer name="config_brightness_ramp_rate_slow">60</integer>
+
     <!-- Array of light sensor lux values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 control points as follows:
          (1-based arrays)
@@ -153,33 +173,33 @@
          This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
         <item>4</item>
-        <item>4</item>
-        <item>4</item>
-        <item>8</item>
-        <item>15</item>
-        <item>20</item>
-        <item>26</item>
-        <item>35</item>
-        <item>45</item>
-        <item>46</item>
-        <item>46</item>
-        <item>46</item>
-        <item>60</item>
-        <item>60</item>
-        <item>60</item>
-        <item>64</item>
-        <item>66</item>
+        <item>5</item>
+        <item>7</item>
+        <item>10</item>
+        <item>14</item>
+        <item>18</item>
+        <item>22</item>
+        <item>27</item>
+        <item>32</item>
+        <item>38</item>
+        <item>48</item>
+        <item>58</item>
         <item>70</item>
-        <item>73</item>
-        <item>80</item>
-        <item>88</item>
-        <item>110</item>
+        <item>85</item>
+        <item>100</item>
+        <item>115</item>
         <item>130</item>
-        <item>135</item>
         <item>145</item>
-        <item>180</item>
-        <item>200</item>
+        <item>160</item>
+        <item>175</item>
+        <item>190</item>
+        <item>205</item>
+        <item>220</item>
+        <item>230</item>
         <item>240</item>
+        <item>248</item>
+        <item>252</item>
+        <item>254</item>
         <item>255</item>
     </integer-array>
 

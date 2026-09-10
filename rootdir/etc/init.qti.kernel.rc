@@ -47,13 +47,6 @@ on early-init
 on init
     wait_for_prop vendor.all.modules.ready 1
 
-    # Create cgroup mount point for memory
-    mkdir /sys/fs/cgroup/memory/bg 0750 root system
-    write /sys/fs/cgroup/memory/bg/memory.swappiness 140
-    write /sys/fs/cgroup/memory/bg/memory.move_charge_at_immigrate 1
-    chown root system /sys/fs/cgroup/memory/bg/tasks
-    chmod 0660 /sys/fs/cgroup/memory/bg/tasks
-
     # update scheduler tunables
     write /dev/cpuctl/foreground/cpu.uclamp.sched_boost_no_override 1
     write /dev/cpuctl/background/cpu.uclamp.colocate 0

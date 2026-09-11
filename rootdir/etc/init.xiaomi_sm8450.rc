@@ -121,7 +121,7 @@ on charger
     restart vendor.charger
 
 on property:sys.boot_completed=1
-    # Set thermal mode to mgame
+    # Set default thermal profile
     write /sys/devices/virtual/thermal/thermal_message/sconfig 0
 
     # Dynamically set IRQ affinity for KGSL and DRM

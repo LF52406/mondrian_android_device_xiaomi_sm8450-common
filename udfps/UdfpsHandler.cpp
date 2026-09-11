@@ -14,6 +14,7 @@
 #include <poll.h>
 #include <sys/ioctl.h>
 #include <atomic>
+#include <bitset>
 #include <fstream>
 #include <thread>
 
@@ -247,6 +248,16 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
         /*
          * This authentication attempt is over as well. A subsequent genuine
          * onFingerDown() clears the guard and starts a new attempt normally.
+         */
+        mAuthCompleted.store(true, std::memory_order_release);
+        onFingerUp();
+    }
+
+    void cancel() {
+        /*
+         * Session::cancel() explicitly calls into UdfpsHandler. Treat
+         * cancellation as a terminal state too so a queued display event
+         * cannot resurrect the illumination after the client has stopped.
          */
         mAuthCompleted.store(true, std::memory_order_release);
         onFingerUp();

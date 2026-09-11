@@ -13,9 +13,9 @@
 
 #include <poll.h>
 #include <sys/ioctl.h>
-#include <atomic>
 #include <bitset>
 #include <fstream>
+#include <mutex>
 #include <thread>
 
 #include <display/drm/mi_disp.h>
@@ -136,30 +136,34 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
                 bool requestLowBrightnessCapture = value & FOD_LOW_BRIGHTNESS_CAPTURE;
 
                 /*
-                 * Screen-off unlock can race with the display wake-up path:
-                 * authentication finishes and LHBM is disabled, then a stale
-                 * LOCAL_HBM_UI_READY event arrives and re-arms fingerprint
-                 * illumination. Keep the authentication completion state
-                 * separate from the display event thread and never allow a
-                 * late UI_READY event to turn the FOD spot back on.
-                 *
-                 * The UI_READY event also gives us a reliable point at which
-                 * the display path is alive again, so retry LHBM OFF here in
-                 * case the original OFF raced with panel wake/AOD exit.
+                 * UI_READY is asynchronous to the fingerprint callbacks. Serialize it with
+                 * finger/auth state so a late display event can never win a race against
+                 * onFingerUp()/authentication completion and re-enable the bright spot.
                  */
-                if (localHbmUiReady && mAuthCompleted.load(std::memory_order_acquire)) {
-                    LOG(WARNING) << "suppressing stale LOCAL_HBM_UI_READY after authentication";
-
-                    mDevice->extCmd(mDevice, COMMAND_NIT, TARGET_BRIGHTNESS_OFF);
-                    setLocalHbm(fd.get(), LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP);
-                    continue;
-                }
-
-                mDevice->extCmd(mDevice, COMMAND_NIT,
+                bool suppressUiReady = false;
+                {
+                    std::lock_guard<std::mutex> lock(mStateMutex);
+                    suppressUiReady =
+                            localHbmUiReady && (!mFingerDown || mAuthCompleted);
+                    if (!suppressUiReady) {
+                        setVendorNitLocked(
                                 localHbmUiReady
                                         ? (requestLowBrightnessCapture ? TARGET_BRIGHTNESS_110NIT
                                                                        : TARGET_BRIGHTNESS_1000NIT)
                                         : TARGET_BRIGHTNESS_OFF);
+                    } else {
+                        setVendorNitLocked(TARGET_BRIGHTNESS_OFF);
+                    }
+                }
+
+                if (suppressUiReady) {
+                    LOG(WARNING) << "suppressing stale LOCAL_HBM_UI_READY";
+                    /*
+                     * UI_READY also proves the display path is alive. Reassert LHBM OFF in
+                     * case the first OFF raced panel wake/AOD exit.
+                     */
+                    setLocalHbm(fd.get(), LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP);
+                }
             }
         }).detach();
     }
@@ -168,7 +172,11 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
         LOG(DEBUG) << __func__ << "x: " << x << ", y: " << y;
 
         // A real new pointer-down starts a fresh UDFPS illumination cycle.
-        mAuthCompleted.store(false, std::memory_order_release);
+        {
+            std::lock_guard<std::mutex> lock(mStateMutex);
+            mAuthCompleted = false;
+            mFingerDown = true;
+        }
 
         mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_X, x);
         mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_Y, y);
@@ -187,32 +195,7 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
         setLocalHbm(disp_fd_.get(), LHBM_TARGET_BRIGHTNESS_WHITE_1000NIT);
     }
 
-    void onFingerUp() {
-        LOG(DEBUG) << __func__;
-
-        mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_X, 0);
-        mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_Y, 0);
-        mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_STATUS, PARAM_FOD_RELEASED);
-
-        /*
-         * Reset vendor-side illumination immediately instead of waiting for a
-         * later LOCAL_HBM_UI_NONE event. This keeps the fingerprint HAL and the
-         * panel LHBM state in sync when unlock completes during panel wake.
-         */
-        mDevice->extCmd(mDevice, COMMAND_NIT, TARGET_BRIGHTNESS_OFF);
-
-        // Disable HBM
-        setLocalHbm(disp_fd_.get(), LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP);
-
-        // Update fod_finger_state node in case hwmodule polls it
-        struct touch_mode_request touchRequest = {
-                .mode = TOUCH_MODE_FOD_FINGER_STATE,
-                .value = 0,
-        };
-        if (ioctl(touch_fd_.get(), TOUCH_IOC_SET_CUR_VALUE, &touchRequest) < 0) {
-            PLOG(ERROR) << "failed to set TOUCH_MODE_FOD_FINGER_STATE=0";
-        }
-    }
+    void onFingerUp() { releaseFinger(false); }
 
     void onAcquired(int32_t result, int32_t vendorCode) {
         LOG(DEBUG) << __func__ << " result: " << result << " vendorCode: " << vendorCode;
@@ -234,42 +217,76 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
         }
     }
 
-    void onAuthenticationSucceeded() {
-        /*
-         * Publish completion before cleanup. The FOD event thread runs
-         * concurrently and must not be able to re-enable illumination between
-         * authentication success and the LHBM/NIT OFF sequence.
-         */
-        mAuthCompleted.store(true, std::memory_order_release);
-        onFingerUp();
-    }
+    void onAuthenticationSucceeded() { releaseFinger(true); }
 
-    void onAuthenticationFailed() {
-        /*
-         * This authentication attempt is over as well. A subsequent genuine
-         * onFingerDown() clears the guard and starts a new attempt normally.
-         */
-        mAuthCompleted.store(true, std::memory_order_release);
-        onFingerUp();
-    }
+    void onAuthenticationFailed() { releaseFinger(true); }
 
-    void cancel() {
-        /*
-         * Session::cancel() explicitly calls into UdfpsHandler. Treat
-         * cancellation as a terminal state too so a queued display event
-         * cannot resurrect the illumination after the client has stopped.
-         */
-        mAuthCompleted.store(true, std::memory_order_release);
-        onFingerUp();
-    }
+    void cancel() { releaseFinger(true); }
 
   private:
     fingerprint_device_t* mDevice;
     android::base::unique_fd disp_fd_;
     android::base::unique_fd touch_fd_;
 
-    // Written by fingerprint callbacks and read by the display-event thread.
-    std::atomic_bool mAuthCompleted{false};
+    /*
+     * Fingerprint callbacks and the display event listener run on different threads.
+     * Keep the logical finger/auth state and vendor illumination command serialized.
+     */
+    std::mutex mStateMutex;
+    bool mAuthCompleted = false;
+    bool mFingerDown = false;
+    int mVendorNit = TARGET_BRIGHTNESS_OFF;
+
+    void setVendorNitLocked(int value) {
+        if (mVendorNit == value) {
+            return;
+        }
+
+        mDevice->extCmd(mDevice, COMMAND_NIT, value);
+        mVendorNit = value;
+    }
+
+    void releaseFinger(bool terminal) {
+        bool releasePhysicalState = false;
+
+        {
+            std::lock_guard<std::mutex> lock(mStateMutex);
+
+            if (terminal) {
+                mAuthCompleted = true;
+            }
+
+            releasePhysicalState = mFingerDown;
+            mFingerDown = false;
+
+            if (releasePhysicalState) {
+                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_X, 0);
+                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_Y, 0);
+                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_STATUS, PARAM_FOD_RELEASED);
+                setVendorNitLocked(TARGET_BRIGHTNESS_OFF);
+            }
+        }
+
+        /*
+         * Ignore duplicate non-terminal finger-up callbacks. A terminal callback still
+         * reasserts LHBM OFF so a failed OFF during panel wake gets another chance.
+         */
+        if (!releasePhysicalState && !terminal) {
+            return;
+        }
+
+        setLocalHbm(disp_fd_.get(), LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP);
+
+        if (releasePhysicalState) {
+            struct touch_mode_request touchRequest = {
+                    .mode = TOUCH_MODE_FOD_FINGER_STATE,
+                    .value = 0,
+            };
+            if (ioctl(touch_fd_.get(), TOUCH_IOC_SET_CUR_VALUE, &touchRequest) < 0) {
+                PLOG(ERROR) << "failed to set TOUCH_MODE_FOD_FINGER_STATE=0";
+            }
+        }
+    }
 
     void setLocalHbm(int fd, uint32_t value) {
         struct disp_local_hbm_req displayLhbmRequest = {

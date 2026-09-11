@@ -140,27 +140,21 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
                  * finger/auth state so a late display event can never win a race against
                  * onFingerUp()/authentication completion and re-enable the bright spot.
                  */
-                bool suppressUiReady = false;
-                {
-                    std::lock_guard<std::mutex> lock(mStateMutex);
-                    suppressUiReady =
-                            localHbmUiReady && (!mFingerDown || mAuthCompleted);
-                    if (!suppressUiReady) {
-                        setVendorNitLocked(
-                                localHbmUiReady
-                                        ? (requestLowBrightnessCapture ? TARGET_BRIGHTNESS_110NIT
-                                                                       : TARGET_BRIGHTNESS_1000NIT)
-                                        : TARGET_BRIGHTNESS_OFF);
-                    } else {
-                        setVendorNitLocked(TARGET_BRIGHTNESS_OFF);
-                    }
-                }
-
-                if (suppressUiReady) {
+                std::lock_guard<std::mutex> lock(mStateMutex);
+                const bool suppressUiReady =
+                        localHbmUiReady && (!mFingerDown || mAuthCompleted);
+                if (!suppressUiReady) {
+                    setVendorNitLocked(
+                            localHbmUiReady
+                                    ? (requestLowBrightnessCapture ? TARGET_BRIGHTNESS_110NIT
+                                                                   : TARGET_BRIGHTNESS_1000NIT)
+                                    : TARGET_BRIGHTNESS_OFF);
+                } else {
                     LOG(WARNING) << "suppressing stale LOCAL_HBM_UI_READY";
+                    setVendorNitLocked(TARGET_BRIGHTNESS_OFF);
                     /*
-                     * UI_READY also proves the display path is alive. Reassert LHBM OFF in
-                     * case the first OFF raced panel wake/AOD exit.
+                     * Keep this OFF request serialized with finger state. If a new finger goes
+                     * down concurrently, its ON request must be queued after this stale OFF.
                      */
                     setLocalHbm(fd.get(), LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP);
                 }
@@ -171,12 +165,10 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
     void onFingerDown(uint32_t x, uint32_t y, float /*minor*/, float /*major*/) {
         LOG(DEBUG) << __func__ << "x: " << x << ", y: " << y;
 
-        // A real new pointer-down starts a fresh UDFPS illumination cycle.
-        {
-            std::lock_guard<std::mutex> lock(mStateMutex);
-            mAuthCompleted = false;
-            mFingerDown = true;
-        }
+        // Serialize a new illumination cycle against stale terminal/display callbacks.
+        std::lock_guard<std::mutex> lock(mStateMutex);
+        mAuthCompleted = false;
+        mFingerDown = true;
 
         mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_X, x);
         mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_Y, y);
@@ -191,7 +183,7 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
             PLOG(ERROR) << "failed to set TOUCH_MODE_FOD_FINGER_STATE=1";
         }
 
-        // Request HBM
+        // Request HBM after state is visible to the display-event listener.
         setLocalHbm(disp_fd_.get(), LHBM_TARGET_BRIGHTNESS_WHITE_1000NIT);
     }
 
@@ -247,25 +239,14 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
     }
 
     void releaseFinger(bool terminal) {
-        bool releasePhysicalState = false;
+        std::lock_guard<std::mutex> lock(mStateMutex);
 
-        {
-            std::lock_guard<std::mutex> lock(mStateMutex);
-
-            if (terminal) {
-                mAuthCompleted = true;
-            }
-
-            releasePhysicalState = mFingerDown;
-            mFingerDown = false;
-
-            if (releasePhysicalState) {
-                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_X, 0);
-                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_Y, 0);
-                mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_STATUS, PARAM_FOD_RELEASED);
-                setVendorNitLocked(TARGET_BRIGHTNESS_OFF);
-            }
+        if (terminal) {
+            mAuthCompleted = true;
         }
+
+        const bool releasePhysicalState = mFingerDown;
+        mFingerDown = false;
 
         /*
          * Ignore duplicate non-terminal finger-up callbacks. A terminal callback still
@@ -275,6 +256,17 @@ class XiaomiSm8450UdfpsHandler : public UdfpsHandler {
             return;
         }
 
+        if (releasePhysicalState) {
+            mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_X, 0);
+            mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_Y, 0);
+            mDevice->extCmd(mDevice, COMMAND_FOD_PRESS_STATUS, PARAM_FOD_RELEASED);
+            setVendorNitLocked(TARGET_BRIGHTNESS_OFF);
+        }
+
+        /*
+         * Keep the OFF request under the same lock as state changes. A subsequent genuine
+         * finger-down will therefore enqueue its ON only after every old-session OFF.
+         */
         setLocalHbm(disp_fd_.get(), LHBM_TARGET_BRIGHTNESS_OFF_FINGER_UP);
 
         if (releasePhysicalState) {

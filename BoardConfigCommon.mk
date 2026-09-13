@@ -218,6 +218,10 @@ ifeq ($(VENDOR_SECURITY_PATCH),)
 $(error "VENDOR_SECURITY_PATCH must be set for vbmeta rollback index")
 endif
 BOARD_AVB_ENABLE := true
+
+ifeq ($(MONDRIAN_SECURE_AVB),true)
+include $(COMMON_PATH)/security/avb/BoardConfigSecureAvb.mk
+else
 BOARD_AVB_ALGORITHM := SHA256_RSA2048
 BOARD_AVB_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
@@ -230,6 +234,7 @@ BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
 BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA2048
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(shell date -d 'TZ="GMT" $(VENDOR_SECURITY_PATCH)' +%s)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 2
+endif
 
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 

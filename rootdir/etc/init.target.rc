@@ -194,6 +194,7 @@ service vendor.per_mgr /vendor/bin/pm-service
     class core
     user system
     group system
+    ioprio rt 4
 
 service vendor.per_proxy /vendor/bin/pm-proxy
     class core
@@ -201,7 +202,7 @@ service vendor.per_proxy /vendor/bin/pm-proxy
     group system
     disabled
 
-service vendor.mdm_helper /vendor/bin/mdm-helper
+service vendor.mdm_helper /vendor/bin/mdm_helper
     class core
     group system wakelock
     disabled

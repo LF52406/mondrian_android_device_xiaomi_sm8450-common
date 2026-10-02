@@ -123,6 +123,11 @@ on boot
     chown system system /sys/devices/platform/soc/soc:qcom,dsi-display-primary/doze_mode
     chmod 0660 /sys/devices/platform/soc/soc:qcom,dsi-display-primary/doze_mode
 
+    chown cameraserver camera /sys/devices/platform/soc/c42d000.qcom,spmi/spmi-0/0-02/c42d000.qcom,spmi:qcom,pm8350c@2:qcom,flash_led@ee00/leds/led:torch_0/brightness
+    chmod 0660 /sys/devices/platform/soc/c42d000.qcom,spmi/spmi-0/0-02/c42d000.qcom,spmi:qcom,pm8350c@2:qcom,flash_led@ee00/leds/led:torch_0/brightness
+    chown cameraserver camera /sys/devices/platform/soc/c42d000.qcom,spmi/spmi-0/0-02/c42d000.qcom,spmi:qcom,pm8350c@2:qcom,flash_led@ee00/leds/led:switch_2/brightness
+    chmod 0660 /sys/devices/platform/soc/c42d000.qcom,spmi/spmi-0/0-02/c42d000.qcom,spmi:qcom,pm8350c@2:qcom,flash_led@ee00/leds/led:switch_2/brightness
+
     # Xiaomi Thermal Profiles permissions
     chmod 0664 /sys/class/thermal/thermal_message/sconfig
     chown system system /sys/class/thermal/thermal_message/sconfig
@@ -189,7 +194,6 @@ service vendor.per_mgr /vendor/bin/pm-service
     class core
     user system
     group system
-    ioprio rt 4
 
 service vendor.per_proxy /vendor/bin/pm-proxy
     class core
@@ -197,7 +201,7 @@ service vendor.per_proxy /vendor/bin/pm-proxy
     group system
     disabled
 
-service vendor.mdm_helper /vendor/bin/mdm_helper
+service vendor.mdm_helper /vendor/bin/mdm-helper
     class core
     group system wakelock
     disabled

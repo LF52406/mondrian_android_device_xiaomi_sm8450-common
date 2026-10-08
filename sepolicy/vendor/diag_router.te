@@ -1,11 +1,21 @@
-# Define the domain for the diag_router process
+# Qualcomm DIAG router: QRTR modem transport, USB FunctionFS and DIAG HIDL.
 type vendor_diag_router, domain;
-
-# Define the executable file type for the daemon
 type vendor_diag_router_exec, exec_type, vendor_file_type, file_type;
 
-# Allow init to transition to the daemon domain upon execution
 init_daemon_domain(vendor_diag_router)
 
-# Allow diag_router daemon to search the modem data directory
-allow vendor_diag_router vendor_modem_data_file:dir search;
+# Publish the vendor.qti.diaghal::Idiag HIDL interface.
+hal_server_domain(vendor_diag_router, vendor_hal_diaghal)
+hal_attribute_hwservice(vendor_hal_diaghal, vendor_hal_diaghal_hwservice)
+
+# FunctionFS is only accessed when DIAG-over-USB is enabled.
+allow vendor_diag_router functionfs:dir r_dir_perms;
+allow vendor_diag_router functionfs:file rw_file_perms;
+
+# Communication with the modem's DIAG endpoint over QRTR.
+allow vendor_diag_router self:qipcrtr_socket create_socket_perms_no_ioctl;
+allow vendor_diag_router self:netlink_kobject_uevent_socket create_socket_perms_no_ioctl;
+
+# Existing modem data access, extended for diagnostic log creation.
+allow vendor_diag_router vendor_modem_data_file:dir { search add_name write };
+allow vendor_diag_router vendor_modem_data_file:file create_file_perms;

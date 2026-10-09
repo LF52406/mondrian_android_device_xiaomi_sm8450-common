@@ -1,0 +1,29 @@
+# Qualcomm DIAG HIDL policy for TARGET_BUILD_VARIANT=user.
+# The base domain and init transition are declared in sepolicy/vendor.
+# Qualcomm vendor/test supplies separate userdebug/eng diagnostic rules.
+
+hal_server_domain(vendor_diag_router, vendor_hal_diaghal)
+hal_client_domain(vendor_diag_router, hal_allocator)
+
+# Register vendor.qti.diaghal::Idiag/default and allow HIDL communication.
+hwbinder_use(vendor_diag_router)
+hal_attribute_hwservice(vendor_hal_diaghal, vendor_hal_diaghal_hwservice)
+binder_call(vendor_hal_diaghal_client, vendor_hal_diaghal_server)
+binder_call(vendor_hal_diaghal_server, vendor_hal_diaghal_client)
+
+# Only the modem diagnostics transport used by Qualcomm's DIAG router.
+allow vendor_diag_router self:qipcrtr_socket create_socket_perms_no_ioctl;
+allow vendor_diag_router vendor_mhi_diag_device:chr_file rw_file_perms;
+allow vendor_diag_router self:netlink_kobject_uevent_socket create_socket_perms_no_ioctl;
+
+# DIAG USB gadget endpoint. This does not enable USB DIAG by itself.
+allow vendor_diag_router functionfs:dir r_dir_perms;
+allow vendor_diag_router functionfs:file rw_file_perms;
+allowxperm vendor_diag_router functionfs:file ioctl FUNCTIONFS_ENDPOINT_DESC;
+
+# Vendor init grants CAP_KILL to diag-router; restrict it to this domain.
+allow vendor_diag_router self:capability kill;
+
+# Diagnostic log output within the existing vendor modem data label.
+allow vendor_diag_router vendor_modem_data_file:dir { search add_name write };
+allow vendor_diag_router vendor_modem_data_file:file create_file_perms;

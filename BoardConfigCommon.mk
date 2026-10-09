@@ -187,6 +187,13 @@ SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/private
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/public
 BOARD_VENDOR_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
 
+# Qualcomm DIAG HIDL support for release-style user builds.
+# Qualcomm's diagnostic test policy already covers userdebug/eng.
+# Isolate user-only rules to avoid duplicate type/context declarations.
+ifeq ($(TARGET_BUILD_VARIANT),user)
+BOARD_VENDOR_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/diag-user
+endif
+
 # VINTF
 DEVICE_MATRIX_FILE := hardware/qcom-caf/common/compatibility_matrix.xml
 

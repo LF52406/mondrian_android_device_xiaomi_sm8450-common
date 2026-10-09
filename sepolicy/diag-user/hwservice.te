@@ -1,0 +1,2 @@
+# Only for user. Qualcomm vendor/test declares this type for userdebug/eng.
+type vendor_hal_diaghal_hwservice, hwservice_manager_type, protected_hwservice;

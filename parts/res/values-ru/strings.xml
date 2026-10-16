@@ -15,11 +15,6 @@
 
     <!-- Thermal profiles -->
     <string name="thermal_title">Тепловые профили</string>
-    <string name="thermal_enable">Использовать тепловые профили</string>
-    <string name="thermal_apps_title">Приложения</string>
-    <string name="thermal_loading">Загрузка…</string>
-    <string name="thermal_reset">Сбросить настройки</string>
-    <string name="thermal_reset_message">Сбросить тепловые профили и настройки сетевой задержки для всех приложений?</string>
     <string name="game_network_latency_title">Низкая сетевая задержка</string>
     <string name="game_network_latency_summary">Автоматически во время игры через Wi-Fi или мобильный интернет. Может увеличить расход батареи.</string>
     <string name="thermal_summary">Настройка Термопрофилей</string>

@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="thermal_title">Perfiles térmicos</string>
-    <string name="thermal_enable">Usar perfiles térmicos</string>
-    <string name="thermal_summary">Configuración del perfil térmico por aplicación</string>
-    <string name="thermal_apps_title">Aplicaciones</string>
-    <string name="thermal_loading">Cargando…</string>
-    <string name="thermal_default">Predeterminado</string>
-    <string name="thermal_benchmark">Prueba de rendimiento</string>
-    <string name="thermal_browser">Navegador</string>
-    <string name="thermal_camera">Cámara</string>
-    <string name="thermal_dialer">Teléfono</string>
-    <string name="thermal_gaming">Juegos</string>
-    <string name="thermal_navigation">Navegación</string>
-    <string name="thermal_streaming">Videollamadas</string>
-    <string name="thermal_video">Vídeo</string>
-    <string name="thermal_reset">Restablecer ajustes</string>
-    <string name="thermal_reset_message">¿Restablecer los perfiles térmicos y las opciones de latencia de red de todas las aplicaciones?</string>
     <string name="game_network_latency_title">Baja latencia de red</string>
     <string name="game_network_latency_summary">Automáticamente al jugar, con Wi-Fi o datos móviles. Puede consumir más batería.</string>
 </resources>

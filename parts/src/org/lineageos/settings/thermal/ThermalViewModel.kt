@@ -102,18 +102,35 @@ class ThermalViewModel(
     fun updateAppThermalState(packageName: String, state: ThermalState) {
         Logging.d(TAG, "updateAppThermalState: $packageName -> $state")
         thermalUtils.writePackage(packageName, state.id)
+        val isGame = thermalUtils.isGame(packageName)
+        if (!isGame) thermalUtils.setNetworkLatencyEnabled(packageName, false)
         
         // Update UI state
         _uiState.update { currentState ->
             currentState.copy(
                 apps = currentState.apps.map { app ->
                     if (app.packageName == packageName) {
-                        app.copy(currentState = state)
+                        app.copy(
+                            currentState = state,
+                            isGame = isGame,
+                            networkLatencyEnabled = thermalUtils.isNetworkLatencyEnabled(packageName)
+                        )
                     } else {
                         app
                     }
                 }
             )
+        }
+    }
+
+    fun updateNetworkLatency(packageName: String, enabled: Boolean) {
+        thermalUtils.setNetworkLatencyEnabled(packageName, enabled)
+        _uiState.update { state ->
+            state.copy(apps = state.apps.map { app ->
+                if (app.packageName == packageName) {
+                    app.copy(networkLatencyEnabled = thermalUtils.isNetworkLatencyEnabled(packageName))
+                } else app
+            })
         }
     }
 
@@ -138,6 +155,10 @@ class ThermalViewModel(
                                 label = info.label.toString(),
                                 icon = info.getIcon(0),
                                 currentState = thermalUtils.getStateForPackage(
+                                    info.componentName.packageName
+                                ),
+                                isGame = thermalUtils.isGame(info.componentName.packageName),
+                                networkLatencyEnabled = thermalUtils.isNetworkLatencyEnabled(
                                     info.componentName.packageName
                                 )
                             )
@@ -166,6 +187,7 @@ class ThermalViewModel(
     }
 
     private fun removeApp(packageName: String) {
+        thermalUtils.setNetworkLatencyEnabled(packageName, false)
         _uiState.update { currentState ->
             currentState.copy(
                 apps = currentState.apps.filter { it.packageName != packageName }
@@ -182,7 +204,9 @@ class ThermalViewModel(
                 packageName = info.componentName.packageName,
                 label = info.label.toString(),
                 icon = info.getIcon(0),
-                currentState = thermalUtils.getStateForPackage(info.componentName.packageName)
+                currentState = thermalUtils.getStateForPackage(info.componentName.packageName),
+                isGame = thermalUtils.isGame(info.componentName.packageName),
+                networkLatencyEnabled = thermalUtils.isNetworkLatencyEnabled(info.componentName.packageName)
             )
             
             _uiState.update { currentState ->

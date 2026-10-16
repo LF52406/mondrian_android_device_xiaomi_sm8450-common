@@ -8,6 +8,7 @@ package org.lineageos.settings.thermal.ui
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -20,11 +21,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.ImageView
 import androidx.compose.ui.graphics.toArgb
+import org.lineageos.settings.R
 import org.lineageos.settings.thermal.ThermalUtils.ThermalState
 import org.lineageos.settings.thermal.model.AppThermalState
 
@@ -33,6 +36,7 @@ import org.lineageos.settings.thermal.model.AppThermalState
 fun AppThermalItem(
     app: AppThermalState,
     onStateChanged: (ThermalState) -> Unit,
+    onNetworkLatencyChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -111,6 +115,32 @@ fun AppThermalItem(
                         expanded = false
                     }
                 )
+            }
+        }
+        if (app.isGame) {
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .toggleable(
+                        value = app.networkLatencyEnabled,
+                        role = Role.Switch,
+                        onValueChange = onNetworkLatencyChanged
+                    ).padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = stringResource(R.string.game_network_latency_title),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = stringResource(R.string.game_network_latency_summary),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Switch(checked = app.networkLatencyEnabled, onCheckedChange = null)
             }
         }
     }

@@ -51,7 +51,7 @@ private constructor(
     fun startService() {
         if (enabled) {
             Logging.d(TAG, "startService")
-            context.startServiceAsUser(serviceIntent, UserHandle.CURRENT)
+            context.startService(serviceIntent)
         }
     }
 
@@ -87,6 +87,21 @@ private constructor(
     fun resetProfiles() {
         Logging.d(TAG, "resetProfiles")
         value = DEFAULT_VALUE
+        sharedPrefs.edit().remove(NETWORK_LATENCY_APPS).apply()
+    }
+
+    fun isGame(packageName: String): Boolean =
+        getDefaultStateForPackage(packageName) == ThermalState.GAMING ||
+            getStateForPackage(packageName) == ThermalState.GAMING
+
+    fun isNetworkLatencyEnabled(packageName: String): Boolean =
+        sharedPrefs.getStringSet(NETWORK_LATENCY_APPS, emptySet())!!.contains(packageName)
+
+    fun setNetworkLatencyEnabled(packageName: String, enabled: Boolean) {
+        val packages = sharedPrefs.getStringSet(NETWORK_LATENCY_APPS, emptySet())!!.toMutableSet()
+        if (enabled && isGame(packageName)) packages.add(packageName)
+        else packages.remove(packageName)
+        sharedPrefs.edit().putStringSet(NETWORK_LATENCY_APPS, packages).apply()
     }
 
     fun setDefaultThermalProfile() {
@@ -168,6 +183,7 @@ private constructor(
         private const val TAG = "ThermalUtils"
         private const val THERMAL_CONTROL = "thermal_control_v2"
         private const val THERMAL_ENABLED = "thermal_enabled"
+        private const val NETWORK_LATENCY_APPS = "network_latency_apps"
 
         private const val THERMAL_SCONFIG = "/sys/class/thermal/thermal_message/sconfig"
         private const val THERMAL_STATE_DEFAULT = "0"

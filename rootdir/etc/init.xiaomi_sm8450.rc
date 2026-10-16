@@ -13,6 +13,11 @@ on fs
     mkdir /mnt/vendor/persist/qca6490/ 0700 system system
 
 on boot
+    # XiaomiParts renews this UID lease only for an opted-in foreground game.
+    chown system system /sys/module/rmnet_core/parameters/game_low_latency_uid
+    chmod 0600 /sys/module/rmnet_core/parameters/game_low_latency_uid
+    write /sys/module/rmnet_core/parameters/game_low_latency_uid -1
+
     # modem
     chmod 0777 /dev/smd8
     chown radio radio /dev/smd8

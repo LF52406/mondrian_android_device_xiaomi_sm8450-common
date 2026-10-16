@@ -41,7 +41,9 @@
     <string name="thermal_streaming">Streaming</string>
     <string name="thermal_video">Video</string>
     <string name="thermal_reset">Reset to defaults</string>
-    <string name="thermal_reset_message">Are you sure you want to reset thermal profile for all apps?</string>
+    <string name="thermal_reset_message">Reset thermal profiles and network latency options for all apps?</string>
+    <string name="game_network_latency_title">Low network latency</string>
+    <string name="game_network_latency_summary">Automatically while playing, on Wi-Fi or mobile data. May use more battery.</string>
 
     <!-- Clear Speaker -->
     <string name="clear_speaker_title">Clear speaker</string>

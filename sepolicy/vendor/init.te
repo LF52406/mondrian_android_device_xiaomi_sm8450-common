@@ -11,3 +11,6 @@ allow init proc:file write;
 # FPS info
 allow init vendor_sysfs_graphics:dir search;
 allow init vendor_sysfs_graphics:file rw_file_perms;
+
+# Initialize the game lease after the RMNET module has loaded.
+allow vendor_init vendor_sysfs_rmnet_game:file { getattr open write setattr };

@@ -19,20 +19,26 @@ data class AppThermalState(
     val packageName: String,
     val label: String,
     val icon: Drawable,
-    val currentState: ThermalState
+    val currentState: ThermalState,
+    val isGame: Boolean = false,
+    val networkLatencyEnabled: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is AppThermalState) return false
         return packageName == other.packageName &&
                 label == other.label &&
-                currentState == other.currentState
+                currentState == other.currentState &&
+                isGame == other.isGame &&
+                networkLatencyEnabled == other.networkLatencyEnabled
     }
 
     override fun hashCode(): Int {
         var result = packageName.hashCode()
         result = 31 * result + label.hashCode()
         result = 31 * result + currentState.hashCode()
+        result = 31 * result + isGame.hashCode()
+        result = 31 * result + networkLatencyEnabled.hashCode()
         return result
     }
 }

@@ -63,3 +63,6 @@ genfscon sysfs /devices/platform/soc/c42d000.qcom,spmi/spmi-0/0-02/c42d000.qcom,
 # Power / CPU
 genfscon proc /sys/walt/sched_upmigrate u:object_r:vendor_proc_sched_walt:s0
 genfscon proc /sys/walt/sched_downmigrate u:object_r:vendor_proc_sched_walt:s0
+
+# Per-game network latency
+genfscon sysfs /module/rmnet_core/parameters/game_low_latency_uid u:object_r:vendor_sysfs_rmnet_game:s0

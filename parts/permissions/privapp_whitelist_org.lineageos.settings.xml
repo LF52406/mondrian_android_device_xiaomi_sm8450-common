@@ -17,5 +17,6 @@
 <permissions>
     <privapp-permissions package="org.lineageos.settings">
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+        <permission name="android.permission.UPDATE_DEVICE_STATS"/>
     </privapp-permissions>
 </permissions>

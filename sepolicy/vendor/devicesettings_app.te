@@ -2,3 +2,7 @@ allow devicesettings_app vendor_sysfs_graphics:dir search;
 allow devicesettings_app vendor_sysfs_graphics:file rw_file_perms;
 allow devicesettings_app vendor_sysfs_kgsl:dir search;
 allow devicesettings_app vendor_sysfs_kgsl:{ file lnk_file } rw_file_perms;
+
+# Access only the game's expiring UID lease, not arbitrary RMNET parameters.
+allow devicesettings_app sysfs:dir search;
+allow devicesettings_app vendor_sysfs_rmnet_game:file rw_file_perms;

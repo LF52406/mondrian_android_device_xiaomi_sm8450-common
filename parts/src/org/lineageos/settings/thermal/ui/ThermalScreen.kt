@@ -155,6 +155,9 @@ fun ThermalScreen(
                                         app = app,
                                         onStateChanged = { newState ->
                                             viewModel.updateAppThermalState(app.packageName, newState)
+                                        },
+                                        onNetworkLatencyChanged = { enabled ->
+                                            viewModel.updateNetworkLatency(app.packageName, enabled)
                                         }
                                     )
                                 }

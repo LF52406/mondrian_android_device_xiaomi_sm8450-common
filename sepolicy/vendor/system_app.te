@@ -12,3 +12,7 @@ allow system_app hal_health_default:binder call;
 allow system_app hal_nfc_default:binder call;
 allow system_app hal_power_default:binder call;
 allow system_app vendor_hal_keymint_qti:binder call;
+
+# XiaomiParts writes a short-lived game UID lease to this dedicated RMNET node.
+allow system_app sysfs:dir search;
+allow system_app vendor_sysfs_rmnet_game:file { getattr open write };

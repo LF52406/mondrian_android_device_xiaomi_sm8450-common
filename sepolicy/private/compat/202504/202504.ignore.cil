@@ -1,0 +1,9 @@
+;; Device-specific public types not present in the API 202504 policy.
+;; These types have no older platform equivalents.
+(type new_objects)
+(typeattribute new_objects)
+(typeattributeset new_objects
+  ( new_objects
+    devicesettings_app
+    settingslib_prop
+  ))
